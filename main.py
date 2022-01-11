@@ -4,7 +4,7 @@ import telebot
 from downloader import download_track, search_track_by_name
 from database import find_track, add_track
 from settings import GROUP_ID
-bot = telebot.TeleBot("2037209980:AAF5Lv-BX9PfToCmf_FzpKTyzn_GLUHuwtY")
+bot = telebot.TeleBot("")
 # bot = aiogram.Bot(token= "2092930992:AAHylQNSDsf8A-jlzXcrERLxg3llmabpRXY")
 
 STATE = "None"
@@ -49,10 +49,6 @@ def download_and_send(url, chat_id, file_name, message_id, song_name, artist, al
                          'Something went wrong. Please try again. If this message persist connect with @hoksly')
 
 
-@bot.message_handler(commands=['help'])
-def gg(message):
-    msg = """/search - search songs \n/search_album - search albums"""
-    bot.send_message(message.chat.id, msg)
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -99,6 +95,17 @@ def handle_command_adminwindow(message):
     STATE = "Searching_song"
 
 
+@bot.message_handler(commands=['help'])
+def gg(message):
+    msg = """/search - search songs. Still testing"""
+    bot.send_message(message.chat.id, msg)
+
+
+@bot.message_handler(commands=['start'])
+def gg2(message):
+    msg = """Greetings from StolenProd community. \n/To start searching songs use /search"""
+    bot.send_message(message.chat.id, msg)
+
 
 @bot.message_handler(func=lambda message: True)
 def g1g(message):
@@ -111,9 +118,12 @@ def g1g(message):
             SONGS.append([song.artist.name + ' - ' + song.title, song.link, song.title, song.artist.name, song.album.title])
 
         bot.send_message(message.chat.id, "searching...")
-        msg = mkkbd(songs)
-        bot.send_message(message.chat.id, "Songs:", reply_markup=msg)
-        STATE = "None"
+        if len(songs) > 0:
+            msg = mkkbd(songs)
+            bot.send_message(message.chat.id, "Songs:", reply_markup=msg)
+            STATE = "None"
+        else:
+            bot.send_message(message.chat.id, 'Sorry, no songs was found')
     else:
         bot.send_message(message.chat.id, "Send me a command, or /help")
 
