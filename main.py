@@ -5,7 +5,7 @@ from downloader import download_track, search_track_by_name
 from database import find_track, add_track
 from settings import GROUP_ID
 bot = telebot.TeleBot("your token")
-# bot = aiogram.Bot(token= "2092930992:AAHylQNSDsf8A-jlzXcrERLxg3llmabpRXY")
+
 
 STATE = "None"
 SONGS = []
