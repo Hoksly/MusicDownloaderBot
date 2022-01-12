@@ -42,8 +42,8 @@ def call_handler (call):
     user = call.data [0: ind]
     cursel = int (call.data [ind + 1:])
 
-    download_and_send (SONGS[user][cursel][1], call.message.chat.id,   SONGS[user][cursel][0], call.message.id,
-                       SONGS[user][cursel][2], SONGS[user][cursel][3], SONGS[user][cursel][4])
+    download_and_send (SONGS [user][cursel][1], call.message.chat.id, SONGS [user][cursel][0], call.message.id,
+                       SONGS [user][cursel][2], SONGS [user][cursel][3], SONGS [user][cursel][4])
 
     SONGS.pop (str (user))  # chat_id = message.chat.id
 
@@ -80,8 +80,8 @@ def g1g (message):
 @bot.message_handler (commands=['lang'])
 def lang (message):
     markup = telebot.types.InlineKeyboardMarkup ()
-    for i in range (len (translations.languages))
-        markup.add (telebot.types.InlineKeyboardButton (translations.languages [i], callback_data = str (i)))
+    for i in range (len (translations.LGS))
+        markup.add (telebot.types.InlineKeyboardButton (translations.LGS [i], callback_data = str (i)))
     bot.send_message (message.chat.id, "Choose your language:", reply_markup=markup)
 
     
