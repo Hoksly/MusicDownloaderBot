@@ -3,9 +3,9 @@ import os
 import telebot
 from downloader import download_track, search_track_by_name
 from database import find_track, add_track
-from settings import GROUP_ID
+from settings import GROUP_ID, TOKEN
 
-bot = telebot.TeleBot("token")
+bot = telebot.TeleBot(TOKEN)
 
 STATES = set()  # list: id
 SONGS = {}  # dictionary: id - list [songs]
