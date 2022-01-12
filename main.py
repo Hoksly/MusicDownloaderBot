@@ -48,8 +48,7 @@ def call_handler (call):
         SONGS.pop (str (user))  # chat_id = message.chat.id
     elif call.data [0] == 'L':
         translations.UL.update ({user: cursel})
-        # notificate
-
+        bot.send_message (call.message.chat.id, translationsCL [cursel])
 
 @bot.message_handler (commands=['lang'])
 def lang (message):
