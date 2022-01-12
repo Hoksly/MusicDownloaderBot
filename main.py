@@ -6,7 +6,7 @@ import translations
 from downloader import download_track, search_track_by_name
 from database import find_track, add_track
 import time
-
+from telebot.types import Message
 bot = telebot.TeleBot (settings.TOKEN)
 
 
@@ -24,25 +24,19 @@ def download_and_send (url, chat_id, file_name, message_id, song_name, artist, a
     download_track (url)
     time.sleep(1)
 
-    if not os.path.exists ('data/' + file_name + '.mp3'):
-        for el in os.listdir('data'):
-            if file_name in el:
-                print(el)
-                file_name = el
-
     if os.path.exists ('data/' + file_name + '.mp3'):
-        bot.send_audio(chat_id, open('data/' + file_name + '.mp3', 'rb'))
+        new_audio = bot.send_audio(chat_id, open('data/' + file_name + '.mp3', 'rb'))
         time.sleep(2)
+
         try:
-            msg = bot.forward_message(settings.GROUP_ID, chat_id, message_id + 1)
+            msg = bot.forward_message(settings.GROUP_ID, chat_id, new_audio.id)
             file_id = msg.audio.file_id
 
             if file_id:
                 add_track(song_name, artist, album, file_id)
 
-
         except Exception as e:
-            print('EXCEPTION:', e)
+            print('EXCEPTION LINE 44:', e)
 
         os.remove('data/' + file_name + '.mp3')
 
@@ -62,16 +56,18 @@ def call_handler (call):
             SONGS.pop (str (user))  # chat_id = message.chat.id
 
         except Exception as e:
-            print("EXCEPTION LINE 64:", e)
+            print("EXCEPTION LINE 59:", e)
             bot.send_message(call.message.chat.id, translations.MT[7][translations.UL [str (call.message.chat.id)]])
 
     elif call.data [0] == 'L':
         translations.UL.update ({user: cursel})
         bot.send_message (call.message.chat.id, translations.CL [cursel])
 
+
 @bot.message_handler (commands=['lang'])
-def lang (message):
-    #if message.chat.id in STATES:
+def lang (message: Message):
+    if message.chat.id in STATES:
+        STATES.remove(message.chat.id)
     try:
         user_lang = translations.UL [str (message.chat.id)]
     except KeyError:
@@ -85,7 +81,7 @@ def lang (message):
 
     
 @bot.message_handler (commands=['search'])
-def search (message):
+def search (message: Message):
     #if message.chat.id in STATES:
     global STATES
     try:
@@ -99,8 +95,10 @@ def search (message):
 
 
 @bot.message_handler (commands=['help'])
-def helpp (message):
-    #if message.chat.id in STATES:
+def helpp (message: Message):
+    if message.chat.id in STATES:
+        STATES.remove(message.chat.id)
+
     try: # думаю, лучше всё же убрать, но после того, как реализум загрузку UL с файла
         user_lang = translations.UL [str (message.chat.id)]
     except KeyError:
@@ -111,12 +109,14 @@ def helpp (message):
 
 @bot.message_handler (commands=['start'])
 def start (message):
-    #if message.chat.id in STATES:
+    if message.chat.id in STATES:
+        STATES.remove(message.chat.id)
     user_id = str (message.chat.id)
     if not user_id in translations.UL:
         translations.UL.update ({user_id: 0})
     bot.send_message (message.chat.id, translations.MT [0] [translations.UL [user_id]])
     helpp (message)
+
 
 @bot.message_handler (content_types=['text'])
 def g1g (message):
@@ -140,10 +140,13 @@ def g1g (message):
                 markup.add (telebot.types.InlineKeyboardButton (songs[i].artist.name + ' - ' + songs [i].title, callback_data = 'S' + str (i)))
             bot.send_message (message.chat.id, translations.MT [4] [user_lang], reply_markup=markup)
 
-            STATES.remove (message.chat.id)
 
         else:
             bot.send_message (message.chat.id, translations.MT [5] [user_lang])
+
+
+        STATES.remove(message.chat.id)
+
     else:
         helpp (message)
 
