@@ -1,2 +1,2 @@
 PATH = "data"
-GROUP_ID = -1 # your channel
+GROUP_ID = 1 # your channel

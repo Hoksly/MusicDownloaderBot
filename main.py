@@ -4,25 +4,22 @@ import telebot
 from downloader import download_track, search_track_by_name
 from database import find_track, add_track
 from settings import GROUP_ID
-bot = telebot.TeleBot("your token")
+
+bot = telebot.TeleBot("token")
+
+STATES = set()  # list: id
+SONGS = {}  # dictionary: id - list [songs]
+UL = []  # dictionary: id - byte
 
 
-STATE = "None"
-SONGS = []
+# MT = [[]]
 
 
-def mkkbd(songs):
+def mkkbd(songs, idd):
     markup = telebot.types.InlineKeyboardMarkup()
-
-    # for text, link in strlst.items ():
-
     for i in range(len(songs)):
-        # markup.add (telebot.types.InlineKeyboardButton (text, link, link))
         markup.add(telebot.types.InlineKeyboardButton(songs[i].artist.name + ' - ' + songs[i].title,
-                                                      callback_data=str(i)))
-
-    # markup.add(telebot.types.InlineKeyboardButton("Download all", callback_data=len(SONGS)))
-
+                                                      callback_data=str(idd) + "|" + str(i)))
     return markup
 
 
@@ -46,97 +43,85 @@ def download_and_send(url, chat_id, file_name, message_id, song_name, artist, al
 
     else:
         bot.send_message(chat_id,
-                         'Something went wrong. Please try again. If this message persist connect with @hoksly')
+                         "Something went wrong. Please, try again. If this message persists, contact with @hoksly")
 
+    # clearing user data
 
 
 
 @bot.callback_query_handler(func=lambda call: True)
-def handle_query(call):
-    # bot.answer_callback_query(call.id, "Callback got this: " + call.data)
-    # download_track(call.data)
+def call_handler(call):
+    # извлечь из call.data id пользователя
+    ind = call.data.index('|')
 
-    if int(call.data) == len(SONGS):
-        for i in range(len(SONGS)):
-            '''
-            download_track(SONGS[int(call.data)][1])
-            if os.path.exists('data/' + SONGS[int(call.data)][0] + '.mp3'):
-                bot.send_audio(call.message.chat.id, open('data/' + SONGS[int(call.data)][0] + '.mp3', 'rb'))
-                msg = bot.forward_message(-1001206103529, call.message.chat.id, call.message.id + 2)
-                file_id = msg.audio.file_id
+    user = call.data[0: ind]
+    cursel = int(call.data[ind + 1:])
 
-                if file_id:
-                    add_track(all_data[1], all_data[2], all_data[3], file_id)
+    download_and_send(SONGS[user][cursel][1], call.message.chat.id, SONGS[user][cursel][0], call.message.id,
+                      SONGS[user][cursel][2], SONGS[user][cursel][3], SONGS[user][cursel][4])
 
-            else:
-                bot.send_message(call.message.chat.id, 'Something went wrong. Please try again. If this message persist connect with @hoksly')
-            '''
-
-    else:
-        download_and_send(SONGS[int(call.data)][1], call.message.chat.id, SONGS[int(call.data)][0],
-                          call.message.id,
-                          SONGS[int(call.data)][2], SONGS[int(call.data)][3], SONGS[int(call.data)][4])
+    SONGS.pop(str(user))  # chat_id = message.chat.id
 
 
-'''
-        
-        download_track(SONGS[int(call.data[0])][1])
-        if os.path.exists('data/' + SONGS[int(call.data)][0] + '.mp3'):
-            bot.send_audio(call.message.chat.id, open('data/' + SONGS[int(call.data)][0] + '.mp3', 'rb'))
 
-            # bot.send_message(call.message.chat.id, 'GG')
-'''
+@bot.message_handler(commands=['lang'])  # !
+def search(message):
+    print("Bruh")
 
 
 @bot.message_handler(commands=['search'])
-def handle_command_adminwindow(message):
-    global STATE
-    bot.send_message(message.chat.id, "Send me a name of song")
-    STATE = "Searching_song"
+def search(message):
+    global STATES
+    bot.send_message(message.chat.id, "Send me a name of the song")
+    STATES.add(message.chat.id)
 
 
 @bot.message_handler(commands=['help'])
-def gg(message):
-    msg = """/search - search songs. Still testing"""
-    bot.send_message(message.chat.id, msg)
+def another_help(message):
+    bot.send_message(message.chat.id,
+                     "Use /help to call this message again.\nUse /search to find a song\nUse /lang to select language")
 
 
 @bot.message_handler(commands=['start'])
-def gg2(message):
-    msg = """Greetings from StolenProd community. \n/To start searching songs use /search"""
-    bot.send_message(message.chat.id, msg)
+def start(message):
+    bot.send_message(message.chat.id, "Start message")
 
+'''
 
 @bot.message_handler(func=lambda message: True)
+def other(message):
+    helpp(message)
+
+'''
+
+
+@bot.message_handler(content_types=['text'])
 def g1g(message):
-    global STATE
+    global STATES
     global SONGS
-    if STATE == "Searching_song":
+    if message.chat.id in STATES:
+        bot.send_message(message.chat.id, "Searching...")
         songs = search_track_by_name(message.text)
-        SONGS = []
-        for song in songs:
-            SONGS.append([song.artist.name + ' - ' + song.title, song.link, song.title, song.artist.name, song.album.title])
+        user_id = str(message.chat.id)
+        SONGS.update({user_id: []})
+        user_songs = []
+        for song in songs:  # creating a list of songs with all necessary data
+            user_songs.append([song.artist.name + ' - ' + song.title, song.link, song.title, song.artist.name,
+                               song.album.title])
 
-        bot.send_message(message.chat.id, "searching...")
+        SONGS.update({user_id: user_songs})  # updating of global dict ()
+
+
         if len(songs) > 0:
-            msg = mkkbd(songs)
+            msg = mkkbd(songs, message.chat.id)
             bot.send_message(message.chat.id, "Songs:", reply_markup=msg)
-            STATE = "None"
+
+            STATES.remove(message.chat.id)
+
         else:
-            bot.send_message(message.chat.id, 'Sorry, no songs was found')
+            bot.send_message(message.chat.id, "Sorry, couldn't find any songs with this name. Please try again")
     else:
-        bot.send_message(message.chat.id, "Send me a command, or /help")
+        pass
 
-
-'''
-@bot.message_handler(commands=['help'])
-def gg(message):
-    msg = """/search - search songs \n/search_album - search albums"""
-    bot.send_audio(message.chat.id , open('data/Metallica - Battery.mp3', 'rb'))
-    msg = bot.forward_message(-1001206103529, message.chat.id, message.id + 1)
-    bot.send_message(message.chat.id, str(msg.id))
-    bot.send_message(message.chat.id, str(msg.audio.file_id))
-    file_id = msg.audio.file_id
-'''
 
 bot.polling()
