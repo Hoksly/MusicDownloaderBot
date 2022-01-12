@@ -53,10 +53,11 @@ def call_handler (call):
 @bot.message_handler (commands=['lang'])
 def lang (message):
     #if message.chat.id in STATES:
+    user_lang = translations.UL [str (message.chat.id)]
     markup = telebot.types.InlineKeyboardMarkup ()
     for i in range (len (translations.LGS)):
         markup.add (telebot.types.InlineKeyboardButton (translations.LGS [i], callback_data = 'L' + str (i)))
-    bot.send_message (message.chat.id, "Choose your language:", reply_markup=markup)
+    bot.send_message (message.chat.id, translations.MT [6] [user_lang], reply_markup=markup)
 
     
 @bot.message_handler (commands=['search'])
@@ -76,7 +77,7 @@ def search (message):
 @bot.message_handler (commands=['help'])
 def helpp (message):
     #if message.chat.id in STATES:
-    try:
+    try: # думаю, лучше всё же убрать, но после того, как реализум загрузку UL с файла
         user_lang = translations.UL [str (message.chat.id)]
     except KeyError:
         user_lang = 0
