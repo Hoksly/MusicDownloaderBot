@@ -37,15 +37,20 @@ def download_and_send (url, chat_id, file_name, message_id, song_name, artist, a
 
 @bot.callback_query_handler (func=lambda call: True)
 def call_handler (call):
-    #extract user id from call.data
-    ind = call.data.index ('|')
-    user = call.data [0: ind]
-    cursel = int (call.data [ind + 1:])
+    if call.data [0] == 'S':
+        #extract user id from call.data
+        ind = call.data.index ('|')
+        user = call.data [1: ind]
+        cursel = int (call.data [ind + 1:])
 
-    download_and_send (SONGS [user][cursel][1], call.message.chat.id, SONGS [user][cursel][0], call.message.id,
-                       SONGS [user][cursel][2], SONGS [user][cursel][3], SONGS [user][cursel][4])
+        download_and_send (SONGS [user][cursel][1], call.message.chat.id, SONGS [user][cursel][0], call.message.id,
+                           SONGS [user][cursel][2], SONGS [user][cursel][3], SONGS [user][cursel][4])
 
-    SONGS.pop (str (user))  # chat_id = message.chat.id
+        SONGS.pop (str (user))  # chat_id = message.chat.id
+    elif call.data [0] == 'L':
+        lang = int (call.data [1:])
+        translations.UL [str (message.chat.id)] = lang
+        # notificate
 
 
 @bot.message_handler (content_types=['text'])
@@ -66,7 +71,7 @@ def g1g (message):
         if len (songs) > 0:
             markup = telebot.types.InlineKeyboardMarkup ()
             for i in range (len (songs)):
-                markup.add (telebot.types.InlineKeyboardButton (songs[i].artist.name + ' - ' + songs [i].title, callback_data=str (message.chat.id) + "|" + str (i)))
+                markup.add (telebot.types.InlineKeyboardButton (songs[i].artist.name + ' - ' + songs [i].title, callback_data = 'S' + str (message.chat.id) + "|" + str (i)))
             bot.send_message (message.chat.id, "Songs:", reply_markup=markup)
 
             STATES.remove (message.chat.id)
@@ -81,25 +86,31 @@ def g1g (message):
 def lang (message):
     markup = telebot.types.InlineKeyboardMarkup ()
     for i in range (len (translations.LGS))
-        markup.add (telebot.types.InlineKeyboardButton (translations.LGS [i], callback_data = str (i)))
+        markup.add (telebot.types.InlineKeyboardButton (translations.LGS [i], callback_data = 'L' + str (i)))
     bot.send_message (message.chat.id, "Choose your language:", reply_markup=markup)
 
     
 @bot.message_handler (commands=['search'])
 def search (message):
     global STATES
-    bot.send_message (message.chat.id, "Send me a name of the song")
+    user_lang = translations.UL [str (message.chat.id)]
+    bot.send_message (message.chat.id, translations.MT [2] [user_lang])
     STATES.add (message.chat.id)
 
 
 @bot.message_handler (commands=['help'])
 def helpp (message):
-    bot.send_message (message.chat.id, "Use /help to call this message again.\nUse /search to find a song\nUse /lang to select language")
+    user_lang = translations.UL [str (message.chat.id)]
+    bot.send_message (message.chat.id, translations.MT [0] [user_lang])
 
 
 @bot.message_handler (commands=['start'])
 def start (message):
-    bot.send_message (message.chat.id, "Start message")
+    user_id = str (message.chat.id)
+    if not user_id in translations.UL: # ?
+        translations.UL.update ({user_id: 0})
+    bot.send_message (message.chat.id, translations.MT [0] [translations.UL [user_id]])
+    helpp ()
 
     
 @bot.message_handler (func=lambda message: True)
