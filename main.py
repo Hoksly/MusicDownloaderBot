@@ -67,7 +67,7 @@ def call_handler(call):
 
     elif call.data[0] == 'L':
         translations.UL.update({user: cursel})
-        bot.send_message(call.message.chat.id, translations.CL[cursel])
+        bot.send_message(call.message.chat.id, translations.CL[int(cursel)])
         update_user_language(call.message.chat.id, cursel)
 
 

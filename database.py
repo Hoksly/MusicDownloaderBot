@@ -51,8 +51,9 @@ def add_track(track_id, name, artist, album, file_id):
 def add_user(user_id, user_link = '@none', lang = 0 ):
     con = sqlite3.connect(DATABASE_PATH)
     cur = con.cursor()
-
-    cur.execute("INSERT INTO User(ID, LANGUAGE, LINK, COUNTER) VALUES (?, ?, ?, ?)", (user_id, lang, user_link, 0))
+    cur.execute("SELECT LINK FROM User WHERE ID = ?", (user_id,))
+    if not cur.fetchone():
+        cur.execute("INSERT INTO User(ID, LANGUAGE, LINK, COUNTER) VALUES (?, ?, ?, ?)", (user_id, lang, user_link, 0))
     con.commit()
 
 
@@ -93,7 +94,7 @@ def load_users_languages():
     users = cur.fetchall()
     for el in users:
         UL.update({str(el[0]): el[1]})
-  
+
 
 
 if __name__ == '__main__':
