@@ -9,9 +9,11 @@ MT = [
   ["Searching songs...", "Поиск песен...", "Пошук музики..."], # 3 - searching
   ["Search results:", "Результаты поиска:", "Результати пошуку:"], # 4 - results
   ["Sorry, couldn't find any songs with this name", "К сожалению, не удалось найти ни одной песни с таким названием", "На жаль, не вдалося знайти жодної пісні з такою назвою"], # 5 - not found
-  ["Select bot's language:", "Выберите язык бота:", "Виберіть иову бота:"], # 6 - language selection
+  ["Select bot's language:", "Выберите язык бота:", "Виберіть мову бота:"], # 6 - language selection
+  ["Oh shit, I'm sorry but problem occurred when track was downloading. Please try again", 'RUS', 'UKR'] # 7 When exception occur before downloading
 ]
 UL = {}
+
 
 def main ():
   print ("!")

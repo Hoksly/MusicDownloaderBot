@@ -13,6 +13,7 @@ bot = telebot.TeleBot (settings.TOKEN)
 STATES = set ()  # set: id
 SONGS = {}  # dictionary: id - list [songs]
 
+
 def download_and_send (url, chat_id, file_name, message_id, song_name, artist, album):
     track_id = find_track(name=song_name, album=album, artist=artist)
 
@@ -21,21 +22,33 @@ def download_and_send (url, chat_id, file_name, message_id, song_name, artist, a
         return
 
     download_track (url)
-    if os.path.exists ('data/' + file_name + '.mp3'):
-        bot.send_audio (chat_id, open('data/' + file_name + '.mp3', 'rb'))
-        time.sleep(1)
-        msg = bot.forward_message (settings.GROUP_ID, chat_id, message_id + 1)
-        file_id = msg.audio.file_id
+    time.sleep(1)
 
-        if file_id:
-            add_track(song_name, artist, album, file_id)
+    if not os.path.exists ('data/' + file_name + '.mp3'):
+        for el in os.listdir('data'):
+            if file_name in el:
+                print(el)
+                file_name = el
+
+    if os.path.exists ('data/' + file_name + '.mp3'):
+        bot.send_audio(chat_id, open('data/' + file_name + '.mp3', 'rb'))
+        time.sleep(2)
+        try:
+            msg = bot.forward_message(settings.GROUP_ID, chat_id, message_id + 1)
+            file_id = msg.audio.file_id
+
+            if file_id:
+                add_track(song_name, artist, album, file_id)
+
+
+        except Exception as e:
+            print('EXCEPTION:', e)
 
         os.remove('data/' + file_name + '.mp3')
 
     else:
-        bot.send_message (chat_id, "Something went wrong. Please, try again. If this message persists, contact with @hoksly")
-
-    # clearing user data
+        bot.send_message(chat_id,
+                         "Something went wrong. Please, try again. If this message persists, contact with @hoksly")
 
 
 @bot.callback_query_handler (func=lambda call: True)
@@ -43,17 +56,28 @@ def call_handler (call):
     cursel = int (call.data [1:])
     user = str (call.message.chat.id)
     if call.data [0] == 'S':
-        download_and_send (SONGS [user][cursel][1], call.message.chat.id, SONGS [user][cursel][0], call.message.id,
+        try:
+            download_and_send (SONGS [user][cursel][1], call.message.chat.id, SONGS [user][cursel][0], call.message.id,
                           SONGS [user][cursel][2], SONGS [user][cursel][3], SONGS [user][cursel][4])
-        SONGS.pop (str (user))  # chat_id = message.chat.id
+            SONGS.pop (str (user))  # chat_id = message.chat.id
+
+        except Exception as e:
+            print("EXCEPTION LINE 64:", e)
+            bot.send_message(call.message.chat.id, translations.MT[7][translations.UL [str (call.message.chat.id)]])
+
     elif call.data [0] == 'L':
         translations.UL.update ({user: cursel})
-        bot.send_message (call.message.chat.id, translationsCL [cursel])
+        bot.send_message (call.message.chat.id, translations.CL [cursel])
 
 @bot.message_handler (commands=['lang'])
 def lang (message):
     #if message.chat.id in STATES:
-    user_lang = translations.UL [str (message.chat.id)]
+    try:
+        user_lang = translations.UL [str (message.chat.id)]
+    except KeyError:
+        user_lang = 0
+        translations.UL.update({str(message.chat.id): 0})
+
     markup = telebot.types.InlineKeyboardMarkup ()
     for i in range (len (translations.LGS)):
         markup.add (telebot.types.InlineKeyboardButton (translations.LGS [i], callback_data = 'L' + str (i)))
