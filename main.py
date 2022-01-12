@@ -63,7 +63,12 @@ def lang (message):
 def search (message):
     #if message.chat.id in STATES:
     global STATES
-    user_lang = translations.UL [str (message.chat.id)]
+    try:
+        user_lang = translations.UL [str (message.chat.id)]
+    except KeyError:
+        user_lang = 0
+        translations.UL.update({str(message.chat.id): 0})
+
     bot.send_message (message.chat.id, translations.MT [2] [user_lang])
     STATES.add (message.chat.id)
 
@@ -86,7 +91,7 @@ def start (message):
     if not user_id in translations.UL:
         translations.UL.update ({user_id: 0})
     bot.send_message (message.chat.id, translations.MT [1] [translations.UL [user_id]])
-    helpp ()
+    helpp (message)
 
 @bot.message_handler (content_types=['text'])
 def g1g (message):
