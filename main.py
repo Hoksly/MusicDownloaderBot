@@ -5,7 +5,7 @@ import settings
 import translations
 from downloader import download_track, search_track_by_name
 from database import find_track, add_track
-
+import time
 
 bot = telebot.TeleBot (settings.TOKEN)
 
@@ -23,6 +23,7 @@ def download_and_send (url, chat_id, file_name, message_id, song_name, artist, a
     download_track (url)
     if os.path.exists ('data/' + file_name + '.mp3'):
         bot.send_audio (chat_id, open('data/' + file_name + '.mp3', 'rb'))
+        time.sleep(1)
         msg = bot.forward_message (settings.GROUP_ID, chat_id, message_id + 1)
         file_id = msg.audio.file_id
 
@@ -81,7 +82,7 @@ def helpp (message):
     except KeyError:
         user_lang = 0
         translations.UL.update ({str (message.chat.id): 0})
-    bot.send_message (message.chat.id, translations.MT [0] [user_lang])
+    bot.send_message (message.chat.id, translations.MT [1] [user_lang])
 
 
 @bot.message_handler (commands=['start'])
@@ -90,7 +91,7 @@ def start (message):
     user_id = str (message.chat.id)
     if not user_id in translations.UL:
         translations.UL.update ({user_id: 0})
-    bot.send_message (message.chat.id, translations.MT [1] [translations.UL [user_id]])
+    bot.send_message (message.chat.id, translations.MT [0] [translations.UL [user_id]])
     helpp (message)
 
 @bot.message_handler (content_types=['text'])
