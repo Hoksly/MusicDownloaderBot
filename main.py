@@ -14,15 +14,19 @@ STATES = set ()  # set: id
 SONGS = {}  # dictionary: id - list [songs]
 
 
-def download_and_send (url, chat_id, file_name, message_id, song_name, artist, album):
+def download_and_send (url, chat_id, file_name:str, message_id, song_name, artist, album):
     track_id = find_track(name=song_name, album=album, artist=artist)
-
+    
     if track_id:
         bot.send_audio (chat_id, track_id [0])
         return
 
     download_track (url)
     time.sleep(1)
+
+    while '?' in file_name:
+
+        file_name = file_name.replace('?', '_')
 
     if os.path.exists ('data/' + file_name + '.mp3'):
         new_audio = bot.send_audio(chat_id, open('data/' + file_name + '.mp3', 'rb'))
@@ -49,7 +53,9 @@ def download_and_send (url, chat_id, file_name, message_id, song_name, artist, a
 def call_handler (call):
     cursel = int (call.data [1:])
     user = str (call.message.chat.id)
+
     if call.data [0] == 'S':
+
         try:
             download_and_send (SONGS [user][cursel][1], call.message.chat.id, SONGS [user][cursel][0], call.message.id,
                           SONGS [user][cursel][2], SONGS [user][cursel][3], SONGS [user][cursel][4])
