@@ -8,3 +8,8 @@ MT =
    "Відправ /help щоб побачити це повідомлення знову\nВідправ /search для пошуку пісні\nВідправ /lang для вибору мови бота"], # 1 - help
   ["Now send me a name of the song", "Теперь отправь мне название песни", "Тепер відправ мені назву пісні"] # 2 - search
 ]
+
+def main ():
+  print ("!")
+  # load UL from file
+  # if program stops - save UL to file
