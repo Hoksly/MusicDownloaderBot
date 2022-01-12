@@ -96,9 +96,10 @@ def start (message):
 @bot.message_handler (content_types=['text'])
 def g1g (message):
     global STATES
-    global SONGS
     if message.chat.id in STATES:
-        bot.send_message (message.chat.id, "Searching...")
+        user_lang = translations.UL [str (message.chat.id)]
+        bot.send_message (message.chat.id, translations.MT [3] [user_lang])
+        global SONGS
         songs = search_track_by_name (message.text)
         user_id = str (message.chat.id)
         SONGS.update ({user_id: []})
@@ -112,12 +113,12 @@ def g1g (message):
             markup = telebot.types.InlineKeyboardMarkup ()
             for i in range (len (songs)):
                 markup.add (telebot.types.InlineKeyboardButton (songs[i].artist.name + ' - ' + songs [i].title, callback_data = 'S' + str (i)))
-            bot.send_message (message.chat.id, "Songs:", reply_markup=markup)
+            bot.send_message (message.chat.id, translations.MT [4] [user_lang], reply_markup=markup)
 
             STATES.remove (message.chat.id)
 
         else:
-            bot.send_message (message.chat.id, "Sorry, couldn't find any songs with this name. Please try again")
+            bot.send_message (message.chat.id, translations.MT [5] [user_lang])
     else:
         helpp (message)
 
