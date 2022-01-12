@@ -27,6 +27,13 @@ def search_albums(name):
     return client.search_albums(name)
 
 
+def give_track_data(track_id:int):
+    client = deezer_cp.Client()
+    track = client.get_track(track_id)
+
+
+    return track.title, track.artist.name, track.album.title
+
 if __name__ == '__main__':
-    for el in search_track_by_name("Believer"):
-        print(el.title, el.artist.name)
+    client = deezer_cp.Client()
+
