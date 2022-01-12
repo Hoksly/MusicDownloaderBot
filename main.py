@@ -100,7 +100,11 @@ def search (message):
 
 @bot.message_handler (commands=['help'])
 def helpp (message):
-    user_lang = translations.UL [str (message.chat.id)]
+    try:
+        user_lang = translations.UL [str (message.chat.id)]
+    except KeyError:
+        user_lang = 0
+        translations.UL.update({str(message.chat.id): 0})
     bot.send_message (message.chat.id, translations.MT [0] [user_lang])
 
 
@@ -109,7 +113,7 @@ def start (message):
     user_id = str (message.chat.id)
     if not user_id in translations.UL: # ?
         translations.UL.update ({user_id: 0})
-    bot.send_message (message.chat.id, translations.MT [0] [translations.UL [user_id]])
+    bot.send_message (message.chat.id, translations.MT [1] [translations.UL [user_id]])
     helpp ()
 
     
