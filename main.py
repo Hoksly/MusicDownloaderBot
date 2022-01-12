@@ -17,7 +17,7 @@ def download_and_send (url, chat_id, file_name, message_id, song_name, artist, a
     track_id = find_track(name=song_name, album=album, artist=artist)
 
     if track_id:
-        bot.send_audio(chat_id, track_id[0])
+        bot.send_audio (chat_id, track_id [0])
         return
 
     download_track (url)
@@ -37,19 +37,19 @@ def download_and_send (url, chat_id, file_name, message_id, song_name, artist, a
     # clearing user data
 
 
-@bot.callback_query_handler(func=lambda call: True)
-def call_handler(call):
+@bot.callback_query_handler (func=lambda call: True)
+def call_handler (call):
     # extract user id from call.data
-    ind = call.data.index('|')
-    user = call.data[1: ind]
-    cursel = int(call.data[ind + 1:])
+    ind = call.data.index ('|')
+    user = call.data [1: ind]
+    cursel = int (call.data [ind + 1:])
 
-    if call.data[0] == 'S':
-        download_and_send(SONGS[user][cursel][1], call.message.chat.id, SONGS[user][cursel][0], call.message.id,
-                          SONGS[user][cursel][2], SONGS[user][cursel][3], SONGS[user][cursel][4])
-        SONGS.pop(str(user))  # chat_id = message.chat.id
-    elif call.data[0] == 'L':
-        translations.UL[user] = cursel
+    if call.data [0] == 'S':
+        download_and_send (SONGS [user][cursel][1], call.message.chat.id, SONGS [user][cursel][0], call.message.id,
+                          SONGS [user][cursel][2], SONGS [user][cursel][3], SONGS [user][cursel][4])
+        SONGS.pop (str (user))  # chat_id = message.chat.id
+    elif call.data [0] == 'L':
+        translations.UL.update ({user: cursel})
         # notificate
 
 
