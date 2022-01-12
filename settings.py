@@ -1,2 +1,4 @@
+TOKEN = "token"
 PATH = "data"
-GROUP_ID = 1 # your channel
+CONTACT = "@hoksly"
+GROUP_ID = 1 #your channel
