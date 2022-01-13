@@ -54,13 +54,7 @@ def call_handler(call):
 
     if call.data[0] == 'S':
 
-
         download_and_send(cursel, call.message.chat.id)
-
-
-
-        
-        bot.send_message(call.message.chat.id, translations.MT[7][translations.UL[str(call.message.chat.id)]])
 
     elif call.data[0] == 'L':
         translations.UL.update({user: int(cursel)})
