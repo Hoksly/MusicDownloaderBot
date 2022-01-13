@@ -31,14 +31,22 @@ def download_and_send(unique_id, chat_id):
         time.sleep(2)
 
         try:
-            msg = bot.forward_message(settings.GROUP_ID, chat_id, new_audio.id)
-            file_id = msg.audio.file_id
+            if str(chat_id) not in settings.ADMINS:
+                msg = bot.forward_message(settings.GROUPS_ID[0], chat_id, new_audio.id)
+                file_id = msg.audio.file_id
+
+            else:
+                destination = settings.GROUPS_ID[settings.ADMINS_DESTINATION[str(chat_id)]]
+                msg = bot.forward_message(destination, chat_id, new_audio.id)
+                file_id = msg.audio.file_id
+
 
             if file_id:
                 add_track(int(unique_id), all_data[0], all_data[1], all_data[2], file_id)
 
+
         except:
-            pass
+                pass
 
 
         os.remove('data/' + file_name + '.mp3')
@@ -69,6 +77,17 @@ def call_handler(call):
         bot.edit_message_text(translations.CL[int(cursel)], call.message.chat.id, call.message.id)
 
         update_user_language(call.message.chat.id, cursel)
+
+
+@bot.message_handler(commands=['switch'])
+def switch_destination(message: Message):
+    if message.chat.id in settings.ADMINS:
+        settings.ADMINS_DESTINATION[str(message.chat.id)] += 1
+        if settings.ADMINS_DESTINATION[str(message.chat.id)] == 1:
+            bot.send_message(message.chat.id, translations.MT[8][translations.UL[str(message.chat.id)]])
+        else: # settings.ADMINS_DESTINATION[str(message.chat.id)] == 2
+            bot.send_message(message.chat.id, translations.MT[9][translations.UL[str(message.chat.id)]])
+            settings.ADMINS_DESTINATION[str(message.chat.id)] = 0
 
 
 @bot.message_handler(commands=['lang'])
@@ -104,6 +123,17 @@ def search(message: Message):
     STATES.add(message.chat.id)
 
 
+@bot.message_handler(commands=['group'])
+def check_group(message: Message):
+    if message.chat.id in settings.ADMINS:
+        user_lang = translations.UL[str(message.chat.id)]
+        if settings.ADMINS_DESTINATION[str(message.chat.id)] == 0: # -> Stolen Archive
+            bot.send_message(message.chat.id, translations.MT[11][user_lang])
+
+        else: # == 1 -> Stolen Music
+            bot.send_message(message.chat.id, translations.MT[12][user_lang])
+
+
 @bot.message_handler(commands=['help'])
 def helpp(message: Message):
     if message.chat.id in STATES:
@@ -114,7 +144,10 @@ def helpp(message: Message):
     except KeyError:
         user_lang = 0
         translations.UL.update({str(message.chat.id): 0})
-    bot.send_message(message.chat.id, translations.MT[1][user_lang])
+    if message.chat.id in settings.ADMINS:
+        bot.send_message(message.chat.id, translations.MT[10][user_lang])
+    else:
+        bot.send_message(message.chat.id, translations.MT[1][user_lang])
 
 
 @bot.message_handler(commands=['start'])
