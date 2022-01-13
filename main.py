@@ -8,7 +8,7 @@ from database import find_track, add_track, update_user_language, add_user, upda
 import time
 from telebot.types import Message
 from loader import bot
-
+from deemix.utils.pathtemplates import fixName, fixLongName
 STATES = set()  # set: id
 
 
@@ -22,12 +22,9 @@ def download_and_send(unique_id, chat_id):
 
     download_track(settings.DEEZER_SONG_PRELINK + unique_id)
 
-    file_name = all_data[1] + ' - ' + all_data[0]
-    print(file_name)
-    time.sleep(1)
+    file_name = str(unique_id)
 
-    while '?' in file_name:
-        file_name = file_name.replace('?', '_')
+    time.sleep(1)
 
     if os.path.exists('data/' + file_name + '.mp3'):
         new_audio = bot.send_audio(chat_id, open('data/' + file_name + '.mp3', 'rb'))
@@ -40,10 +37,11 @@ def download_and_send(unique_id, chat_id):
             if file_id:
                 add_track(int(unique_id), all_data[0], all_data[1], all_data[2], file_id)
 
-        except Exception as e:
-            print('EXCEPTION LINE 44:', e)
+        except:
+            pass
 
-        #os.remove('data/' + file_name + '.mp3')
+
+        os.remove('data/' + file_name + '.mp3')
 
     else:
         bot.send_message(chat_id,
