@@ -1,11 +1,11 @@
 import subprocess
 import deezer_cp
 from settings import PATH
+from deemix.__main__ import download
 
 
-def download_track(url, folder=PATH, name= None, artist= None, album = None):
-    subprocess.run("python3 -m deemix {} -p {}".format(url, folder), shell=True)
-    return name, artist, album
+def download_track(url, folder=PATH):
+    download(path=folder, bitrate=None, portable=True, url=[url])
 
 
 def search_track_by_name(name):
