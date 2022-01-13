@@ -45,7 +45,7 @@ def download_and_send(unique_id, chat_id):
 
     else:
         bot.send_message(chat_id,
-                         "Something went wrong. Please, try again. If this message persists, contact with @hoksly or @Cubatomic")
+                         "Something went wrong. Please, try again. If this message persists, contact with @Hoksly or @Cubatomic")
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -65,7 +65,8 @@ def call_handler(call):
 
     elif call.data[0] == 'L':
         translations.UL.update({user: cursel})
-        bot.send_message(call.message.chat.id, translations.CL[int(cursel)])
+        #bot.send_message(call.message.chat.id, translations.CL[int(cursel)])
+        bot.edit_message(translations.CL[int(cursel)], call.message.chat.id, call.message.id)
         update_user_language(call.message.chat.id, cursel)
 
 
@@ -88,8 +89,8 @@ def lang(message: Message):
 
 @bot.message_handler(commands=['search'])
 def search(message: Message):
-    # if message.chat.id in STATES:
-    global STATES
+    if message.chat.id in STATES:
+        STATES.remove(message.chat.id)
     try:
         user_lang = translations.UL[str(message.chat.id)]
     except KeyError:
@@ -129,7 +130,6 @@ def start(message: Message):
 
 @bot.message_handler(content_types=['text'])
 def g1g(message):
-    global STATES
     if message.chat.id in STATES:
         user_lang = translations.UL[str(message.chat.id)]
         bot.send_message(message.chat.id, translations.MT[3][user_lang])
