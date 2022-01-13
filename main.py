@@ -30,15 +30,14 @@ def download_and_send(unique_id, chat_id):
         new_audio = bot.send_audio(chat_id, open('data/' + file_name + '.mp3', 'rb'))
         time.sleep(2)
 
-        try:
-            msg = bot.forward_message(settings.GROUP_ID, chat_id, new_audio.id)
-            file_id = msg.audio.file_id
 
-            if file_id:
-                add_track(int(unique_id), all_data[0], all_data[1], all_data[2], file_id)
+        msg = bot.forward_message(settings.GROUP_ID, chat_id, new_audio.id)
+        file_id = msg.audio.file_id
 
-        except:
-            pass
+        if file_id:
+            add_track(int(unique_id), all_data[0], all_data[1], all_data[2], file_id)
+
+
 
 
         os.remove('data/' + file_name + '.mp3')
@@ -55,13 +54,13 @@ def call_handler(call):
 
     if call.data[0] == 'S':
 
-        try:
-            download_and_send(cursel, call.message.chat.id)
+
+        download_and_send(cursel, call.message.chat.id)
 
 
-        except Exception as e:
-            print("EXCEPTION LINE 59:", e)
-            bot.send_message(call.message.chat.id, translations.MT[7][translations.UL[str(call.message.chat.id)]])
+
+        print("EXCEPTION LINE 59:", e)
+        bot.send_message(call.message.chat.id, translations.MT[7][translations.UL[str(call.message.chat.id)]])
 
     elif call.data[0] == 'L':
         translations.UL.update({user: int(cursel)})
