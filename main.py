@@ -64,9 +64,10 @@ def call_handler(call):
             bot.send_message(call.message.chat.id, translations.MT[7][translations.UL[str(call.message.chat.id)]])
 
     elif call.data[0] == 'L':
-        translations.UL.update({user: cursel})
+        translations.UL.update({user: int(cursel)})
         #bot.send_message(call.message.chat.id, translations.CL[int(cursel)])
-        bot.edit_message(translations.CL[int(cursel)], call.message.chat.id, call.message.id)
+        bot.edit_message_text(translations.CL[int(cursel)], call.message.chat.id, call.message.id)
+
         update_user_language(call.message.chat.id, cursel)
 
 
@@ -75,8 +76,10 @@ def lang(message: Message):
     if message.chat.id in STATES:
         STATES.remove(message.chat.id)
     try:
+
         user_lang = translations.UL[str(message.chat.id)]
     except KeyError:
+
         user_lang = 0
         translations.UL.update({str(message.chat.id): 0})
 
@@ -120,12 +123,14 @@ def start(message: Message):
         STATES.remove(message.chat.id)
 
     user_id = str(message.chat.id)
+
     if not user_id in translations.UL:
         translations.UL.update({user_id: 0})
+        add_user(message.chat.id, '@' + message.from_user.username, 0)
     bot.send_message(message.chat.id, translations.MT[0][translations.UL[user_id]])
 
     helpp(message)
-    add_user(message.chat.id, '@' + message.from_user.username, 0)
+
 
 
 @bot.message_handler(content_types=['text'])
