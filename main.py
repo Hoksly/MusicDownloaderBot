@@ -31,11 +31,12 @@ def download_and_send(unique_id, chat_id):
         time.sleep(2)
 
         try:
-            if str(chat_id) not in settings.ADMINS:
+            if chat_id not in settings.ADMINS:
                 msg = bot.forward_message(settings.GROUPS_ID[0], chat_id, new_audio.id)
                 file_id = msg.audio.file_id
 
             else:
+               
                 destination = settings.GROUPS_ID[settings.ADMINS_DESTINATION[str(chat_id)]]
                 msg = bot.forward_message(destination, chat_id, new_audio.id)
                 file_id = msg.audio.file_id
@@ -163,7 +164,6 @@ def start(message: Message):
     bot.send_message(message.chat.id, translations.MT[0][translations.UL[user_id]])
 
     helpp(message)
-
 
 
 @bot.message_handler(content_types=['text'])
