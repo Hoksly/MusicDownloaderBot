@@ -18,13 +18,13 @@ MT = [
 
   ["Oh shit, I'm sorry but problem occurred when track was downloading. Please try again",
    "Короче, как всегда что-то пошло не так. Не выбирай, пожалуйста, больше этот трек, так как мы понятия не имеем, что именно не работает",
-  "Батько наш Бандера..."], # 7 - when exception occur before downloading
+  "Батько наш Бандера..."], # 7 - when exception occur before downloading (delete this)
 
-  ['Switched to Stolen Music', 'Поток перенаправлен в Stolen Music',
-   'Потік перенапралений в Stolen Music'], # 8 - switching to Stolen Music
+  ["Switched to Stolen Music", "Поток перенаправлен в Stolen Music",
+   "Потік перенапралений в Stolen Music"], # 8 - switching to Stolen Music
 
-  ['Switched back to the Stolen Archive', 'Поток вновь направлен в Stolen Archive',
-   'Потік повернуто до Stolen Archive'], # 9 - switching to Stolen Archive
+  ["Switched back to the Stolen Archive", "Поток вновь направлен в Stolen Archive",
+   "Потік повернуто до Stolen Archive"], # 9 - switching to Stolen Archive
 
   ["Use /help to call this message again\nUse /search to find a song\nUse /lang to select bot's language\n" # 10 admins help
    "Use /switch to switch destination of tracks\nUse /group to see current destination of tracks",
@@ -33,15 +33,9 @@ MT = [
    "Відправте /help щоб побачити це повідомлення знову\nВідправте /search для пошуку пісні\nВідправте /lang для вибору мови бота\n"
    "Відправте /switch щоб змінити канал призначення музики\nВідправте /group щоб дізнатися канал в який надходить музика"],
 
-    ['Stolen Archive', 'RUS', 'UKR'], # 11 /group -> Stolen Archive
+    ["Stolen Archive", "RUS', "UKR"], # 11 /group -> Stolen Archive
 
-    ['Stolen Music', 'RUS', 'UKR'] # 12 /group -> Stolen Music
+    ["Stolen Music", "RUS", "UKR"] # 12 /group -> Stolen Music
 ]
 
 UL = {}
-
-
-def main ():
-  print ("!")
-  # load UL from file
-  # if program stops - save UL to file
