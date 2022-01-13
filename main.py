@@ -59,7 +59,7 @@ def call_handler(call):
 
 
 
-        print("EXCEPTION LINE 59:", e)
+        
         bot.send_message(call.message.chat.id, translations.MT[7][translations.UL[str(call.message.chat.id)]])
 
     elif call.data[0] == 'L':
