@@ -33,7 +33,7 @@ MT = [
    "Відправте /help щоб побачити це повідомлення знову\nВідправте /search для пошуку пісні\nВідправте /lang для вибору мови бота\n"
    "Відправте /switch щоб змінити канал призначення музики\nВідправте /group щоб дізнатися канал в який надходить музика"],
 
-    ["Stolen Archive", "RUS', "UKR"], # 11 /group -> Stolen Archive
+    ["Stolen Archive", "RUS", "UKR"], # 11 /group -> Stolen Archive
 
     ["Stolen Music", "RUS", "UKR"] # 12 /group -> Stolen Music
 ]
