@@ -59,7 +59,7 @@ def call_handler(call):
             
         elif call.data [0] == 'G':
             settings.ADMINS_DESTINATION.update ({user: cursel})
-            bot.edit_message_text(translations.MT [10] [translations.UL[user]] + settings.GROUPS_ID_NAMES [settings.ADMINS_DESTINATION [user]], call.message.chat.id, call.message.id)
+            bot.edit_message_text(translations.MT [11] [translations.UL[user]] + settings.GROUPS_ID_NAMES [settings.ADMINS_DESTINATION [user]], call.message.chat.id, call.message.id)
     except:
         print ('\x1b[0;30;41m' + "Error in call_handler() !" + '\x1b[0m')
 
@@ -81,6 +81,7 @@ def g_switch(message: Message):
             markup = telebot.types.InlineKeyboardMarkup()
             for i in settings.GROUPS_ID_NAMES:
                 markup.add(telebot.types.InlineKeyboardButton(settings.GROUPS_ID_NAMES[i], callback_data='G' + str(i)))
+            bot.send_message(message.chat.id, translations.MT[6][user_lang], reply_markup=markup)
     except:
         print ('\x1b[0;30;41m' + "Error in g_switch() !" + '\x1b[0m')
 
@@ -95,8 +96,7 @@ def lang(message: Message):
         markup = telebot.types.InlineKeyboardMarkup()
         for i in range(len(translations.LGS)):
             markup.add(telebot.types.InlineKeyboardButton(translations.LGS[i], callback_data='L' + str(i)))
-
-        bot.send_message(message.chat.id, translations.MT[6][user_lang], reply_markup=markup)
+        bot.send_message(message.chat.id, translations.MT[10][user_lang], reply_markup=markup)
     except:
         print ('\x1b[0;30;41m' + "Error in lang() !" + '\x1b[0m')
 
