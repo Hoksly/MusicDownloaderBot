@@ -48,6 +48,7 @@ def call_handler(call):
     try:
         cursel = (call.data[1:])
         user = str(call.message.chat.id)
+        
         if call.data[0] == 'S':
             download_and_send(cursel, call.message.chat.id)
 
@@ -55,30 +56,32 @@ def call_handler(call):
             translations.UL.update({user: int(cursel)})
             bot.edit_message_text(translations.CL[int(cursel)], call.message.chat.id, call.message.id)
             update_user_language(call.message.chat.id, cursel)
+            
+        elif call.data [0] == 'G':
+            bot.edit_message_text(translations.MT [10] [translations.UL[user]] + settings.GROUPS_ID_NAMES [settings.ADMINS_DESTINATION [user]], call.message.chat.id, call.message.id)
     except:
         print ('\x1b[0;30;41m' + "Error in call_handler() !" + '\x1b[0m')
 
 
-@bot.message_handler(commands=['group']) ###
-def check_group(message: Message):
-    if message.chat.id in settings.ADMINS:
-        user_lang = translations.UL[str(message.chat.id)]
-        if settings.ADMINS_DESTINATION[str(message.chat.id)] == 0: # -> Stolen Archive
-            bot.send_message(message.chat.id, translations.MT[11][user_lang])
+@bot.message_handler(commands=['group'])
+def g_get(message: Message):
+    try:
+        if message.chat.id in settings.ADMINS:
+            user_lang = translations.UL[str(message.chat.id)]
+            bot.send_message(message.chat.id, translations.MT[9][user_lang] + settings.GROUPS_ID_NAMES [settings.ADMINS_DESTINATION[str(message.chat.id)]]) #?
+    except:
+        print ('\x1b[0;30;41m' + "Error in g_get() !" + '\x1b[0m')
 
-        else: # == 1 -> Stolen Music
-            bot.send_message(message.chat.id, translations.MT[12][user_lang])
 
-
-@bot.message_handler(commands=['switch']) ###
-def switch_destination(message: Message):
-    if message.chat.id in settings.ADMINS:
-        settings.ADMINS_DESTINATION[str(message.chat.id)] += 1
-        if settings.ADMINS_DESTINATION[str(message.chat.id)] == 1:
-            bot.send_message(message.chat.id, translations.MT[8][translations.UL[str(message.chat.id)]])
-        else: # settings.ADMINS_DESTINATION[str(message.chat.id)] == 2
-            bot.send_message(message.chat.id, translations.MT[9][translations.UL[str(message.chat.id)]])
-            settings.ADMINS_DESTINATION[str(message.chat.id)] = 0
+@bot.message_handler(commands=['switch'])
+def g_switch(message: Message):
+    try:
+        if message.chat.id in settings.ADMINS:
+            markup = telebot.types.InlineKeyboardMarkup()
+            for i in settings.GROUPS_ID_NAMES:
+                markup.add(telebot.types.InlineKeyboardButton(settings.GROUPS_ID_NAMES[i], callback_data='G' + str(i)))
+    except:
+        print ('\x1b[0;30;41m' + "Error in g_switch() !" + '\x1b[0m')
 
 
 @bot.message_handler(commands=['lang'])
@@ -117,7 +120,7 @@ def helpp(message: Message):
             STATES.remove(message.chat.id)
         user_lang = translations.UL[str(message.chat.id)]
         if message.chat.id in settings.ADMINS:
-            bot.send_message(message.chat.id, translations.MT[10][user_lang])
+            bot.send_message(message.chat.id, translations.MT[8][user_lang])
         else:
             bot.send_message(message.chat.id, translations.MT[1][user_lang])
     except:
