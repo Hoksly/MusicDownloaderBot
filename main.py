@@ -58,6 +58,7 @@ def call_handler(call):
             update_user_language(call.message.chat.id, cursel)
             
         elif call.data [0] == 'G':
+            settings.ADMINS_DESTINATION.update ({user: cursel})
             bot.edit_message_text(translations.MT [10] [translations.UL[user]] + settings.GROUPS_ID_NAMES [settings.ADMINS_DESTINATION [user]], call.message.chat.id, call.message.id)
     except:
         print ('\x1b[0;30;41m' + "Error in call_handler() !" + '\x1b[0m')
