@@ -40,7 +40,7 @@ def download_and_send(unique_id, chat_id):
         else:
             bot.send_message(chat_id, translations.MT [7] [translations.UL[str(chat_id)]])
     except:
-        print ('\x1b[3;37;41m' + "Error in download_and_send() !" + '\x1b[0m')
+        print ('\x1b[0;30;41m' + "Error in download_and_send() !" + '\x1b[0m')
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -56,7 +56,7 @@ def call_handler(call):
             bot.edit_message_text(translations.CL[int(cursel)], call.message.chat.id, call.message.id)
             update_user_language(call.message.chat.id, cursel)
     except:
-        print ('\x1b[3;37;41m' + "Error in call_handler() !" + '\x1b[0m')
+        print ('\x1b[0;30;41m' + "Error in call_handler() !" + '\x1b[0m')
 
 
 @bot.message_handler(commands=['group']) ###
@@ -94,7 +94,7 @@ def lang(message: Message):
 
         bot.send_message(message.chat.id, translations.MT[6][user_lang], reply_markup=markup)
     except:
-        print ('\x1b[3;37;41m' + "Error in lang() !" + '\x1b[0m')
+        print ('\x1b[0;30;41m' + "Error in lang() !" + '\x1b[0m')
 
 
 @bot.message_handler(commands=['search'])
@@ -107,7 +107,7 @@ def search(message: Message):
         bot.send_message(message.chat.id, translations.MT[2][user_lang])
         STATES.add(message.chat.id)
     except:
-        print ('\x1b[3;37;41m' + "Error in search() !" + '\x1b[0m')
+        print ('\x1b[0;30;41m' + "Error in search() !" + '\x1b[0m')
 
 
 @bot.message_handler(commands=['help'])
@@ -121,7 +121,7 @@ def helpp(message: Message):
         else:
             bot.send_message(message.chat.id, translations.MT[1][user_lang])
     except:
-        print ('\x1b[3;37;41m' + "Error in helpp() !" + '\x1b[0m')
+        print ('\x1b[0;30;41m' + "Error in helpp() !" + '\x1b[0m')
 
 
 @bot.message_handler(commands=['start'])
@@ -137,7 +137,7 @@ def start(message: Message):
 
         helpp(message)
     except:
-        print ('\x1b[3;37;41m' + "Error in start() !" + '\x1b[0m')
+        print ('\x1b[0;30;41m' + "Error in start() !" + '\x1b[0m')
 
 
 @bot.message_handler(content_types=['text'])
@@ -174,7 +174,7 @@ def snm(message):
         else:
             helpp(message)
     except:
-        print ('\x1b[3;37;41m' + "Error in snm() !" + '\x1b[0m')
+        print ('\x1b[0;30;41m' + "Error in snm() !" + '\x1b[0m')
 
 
 @bot.message_handler(func=lambda message: True)

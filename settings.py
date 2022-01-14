@@ -5,6 +5,8 @@ env.read_env()
 
 PATH = "data"
 GROUPS_ID = env.list("GROUP_ID")
+GROUPS_NAMES = env.list("GROUP_NAMES")
+
 for i in range(len(GROUPS_ID)): # str -> int
     GROUPS_ID[i] = int(GROUPS_ID[i])
 
@@ -22,3 +24,8 @@ for admin in ADMINS:
 
 for i in range(len(ADMINS)):
     ADMINS[i] = int(ADMINS[i])
+
+GROUPS_ID_NAMES = {} # target dict
+for i in range(len(GROUPS_ID)):
+    GROUPS_ID_NAMES.update({str(GROUPS_ID[i]):GROUPS_NAMES[i]})
+
