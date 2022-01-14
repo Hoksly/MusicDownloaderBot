@@ -19,9 +19,6 @@ ADMINS = env.list("ADMINS")
 ADMINS_DESTINATION = {}
 
 
-for admin in ADMINS:
-    ADMINS_DESTINATION.update({str(admin): 0}) # admin_id : channel to send
-
 for i in range(len(ADMINS)):
     ADMINS[i] = int(ADMINS[i])
 
@@ -29,3 +26,5 @@ GROUPS_ID_NAMES = {} # target dict
 for i in range(len(GROUPS_ID)):
     GROUPS_ID_NAMES.update({str(GROUPS_ID[i]):GROUPS_NAMES[i]})
 
+for admin in ADMINS:
+    ADMINS_DESTINATION.update({str(admin): next(iter(GROUPS_ID_NAMES))}) # admin_id : channel to send
