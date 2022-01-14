@@ -20,22 +20,16 @@ MT = [
    "Похоже, что-то пошло не так. Пожалуйста, попробуйте снова. Если это сообщение продолжит появляться, свяжитесь с @Hoksly или @Cubatomic",
   "Здається, сталося щось неочікуване. Будь ласка, спробуйте знову. Якщо це повідомлення продовжить з\'являтись, повідомте про це @Hoksly або @Cubatomic"], # 7 - something went wrong
 
-  ["Switched to Stolen Music", "Поток перенаправлен в Stolen Music",
-   "Потік перенапралений в Stolen Music"], # 8 - switching to Stolen Music
-
-  ["Switched back to the Stolen Archive", "Поток вновь направлен в Stolen Archive",
-   "Потік повернуто до Stolen Archive"], # 9 - switching to Stolen Archive
-
-  ["Use /help to call this message again\nUse /search to find a song\nUse /lang to select bot's language\n" # 10 admins help
+  ["Use /help to call this message again\nUse /search to find a song\nUse /lang to select bot's language\n" # 8 - admin help
    "Use /switch to switch destination of tracks\nUse /group to see current destination of tracks",
    "Используйте /help чтобы увидеть это сообщение ещё раз\nИспользуйте /search для поиска песни\nИспользуйте /lang для выбора языка бота"
    "\nИспользуйте /switch что бы изменить группу для пересылки музыки\nИспользуйте /group что бы узнать куда пересылается музыка",
    "Відправте /help щоб побачити це повідомлення знову\nВідправте /search для пошуку пісні\nВідправте /lang для вибору мови бота\n"
    "Відправте /switch щоб змінити канал призначення музики\nВідправте /group щоб дізнатися канал в який надходить музика"],
 
-    ["Stolen Archive", "Stolen Archive", "Stolen Archive"], # 11 /group -> Stolen Archive
+    ["Current forwarding chat: ", "Текущая чат для пересылки: ", "Поточний чат для пересилання: "], # 9 - current group
 
-    ["Stolen Music", "Stolen Music", "Stolen Music"] # 12 /group -> Stolen Music
+    ["Forwarding chat changed to ", "Чат для пересылки изменён на ", "Чат для пересилання змінено на "] # 10 - switch group
 ]
 
 UL = {}
