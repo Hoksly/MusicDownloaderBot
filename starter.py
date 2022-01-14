@@ -1,9 +1,9 @@
 import subprocess
 from time import sleep
-delay = 10 # seconds, increasing after each error
+delay = 60
 
 while True:
-    subprocess.run('python3.8 main.py', shell=True, check=True)
-    sleep(10)
-    delay += 10
+    subprocess.run('venv/bin/python3.8 main.py', shell=True, check=True)
+    sleep(delay)
+
 

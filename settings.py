@@ -1,4 +1,3 @@
-
 from environs import Env
 env = Env()
 env.read_env()
@@ -27,4 +26,4 @@ for i in range(len(GROUPS_ID)):
     GROUPS_ID_NAMES.update({str(GROUPS_ID[i]):GROUPS_NAMES[i]})
 
 for admin in ADMINS:
-    ADMINS_DESTINATION.update({str(admin): next(iter(GROUPS_ID_NAMES))}) # admin_id : channel to send
+    ADMINS_DESTINATION.update({str(admin): str(GROUPS_ID[0])}) # admin_id : channel to send

@@ -1,14 +1,11 @@
-import subprocess
 import os
 import telebot
 import settings
 import translations
 from downloader import download_track, search_track_by_name, give_track_data
 from database import find_track, add_track, update_user_language, add_user, update_user_song_counter
-import time
 from telebot.types import Message
 from loader import bot
-from deemix.utils.pathtemplates import fixName, fixLongName
 
 os.system ("")
 STATES = set()
@@ -26,22 +23,28 @@ def download_and_send(unique_id, chat_id):
         if os.path.exists('data/' + file_name + '.mp3'):
             new_audio = bot.send_audio(chat_id, open('data/' + file_name + '.mp3', 'rb'))
             try:
+
+
                 if chat_id not in settings.ADMINS:
+                    print('HERE')
                     msg = bot.forward_message(settings.GROUPS_ID[0], chat_id, new_audio.id)
                     file_id = msg.audio.file_id
                 else:
-                    destination = settings.GROUPS_ID[settings.ADMINS_DESTINATION[str(chat_id)]]
+                    destination = int(settings.ADMINS_DESTINATION[str(chat_id)])
                     msg = bot.forward_message(destination, chat_id, new_audio.id)
                     file_id = msg.audio.file_id
+
                 if file_id:
                     add_track(int(unique_id), all_data[0], all_data[1], all_data[2], file_id)
-            except:
-                    pass
+
+            except Exception as e:
+                    print(e)
+
             os.remove('data/' + file_name + '.mp3')
         else:
             bot.send_message(chat_id, translations.MT [7] [translations.UL[str(chat_id)]])
-    except:
-        print ('\x1b[0;30;41m' + "Error in download_and_send() !" + '\x1b[0m')
+    except Exception as e:
+        print ('\x1b[0;30;41m' + "Error in download_and_send(): {}!".format(e) + '\x1b[0m')
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -80,9 +83,10 @@ def g_switch(message: Message):
     try:
         if message.chat.id in settings.ADMINS:
             markup = telebot.types.InlineKeyboardMarkup()
+            user_lang = translations.UL[str(message.chat.id)]
             for i in settings.GROUPS_ID_NAMES:
                 markup.add(telebot.types.InlineKeyboardButton(settings.GROUPS_ID_NAMES[i], callback_data='G' + str(i)))
-            bot.send_message(message.chat.id, translations.MT[6][user_lang], reply_markup=markup)
+            bot.send_message(message.chat.id, translations.MT[10][user_lang], reply_markup=markup)
     except:
         print ('\x1b[0;30;41m' + "Error in g_switch() !" + '\x1b[0m')
 
@@ -97,7 +101,7 @@ def lang(message: Message):
         markup = telebot.types.InlineKeyboardMarkup()
         for i in range(len(translations.LGS)):
             markup.add(telebot.types.InlineKeyboardButton(translations.LGS[i], callback_data='L' + str(i)))
-        bot.send_message(message.chat.id, translations.MT[10][user_lang], reply_markup=markup)
+        bot.send_message(message.chat.id, translations.MT[6][user_lang], reply_markup=markup)
     except:
         print ('\x1b[0;30;41m' + "Error in lang() !" + '\x1b[0m')
 
