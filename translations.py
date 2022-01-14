@@ -16,9 +16,9 @@ MT = [
   ["Sorry, couldn't find any songs with this name", "К сожалению, не удалось найти ни одной песни с таким названием", "На жаль, не вдалося знайти жодної пісні з такою назвою"], # 5 - not found
   ["Select bot's language:", "Выберите язык бота:", "Виберіть мову бота:"], # 6 - language selection
 
-  ["Oh shit, I'm sorry but problem occurred when track was downloading. Please try again",
-   "Короче, как всегда что-то пошло не так. Не выбирай, пожалуйста, больше этот трек, так как мы понятия не имеем, что именно не работает",
-  "Батько наш Бандера..."], # 7 - when exception occur before downloading (delete this)
+  ["It looks like something went wrong. Please, try again. If this message persists, contact with @Hoksly or @Cubatomic",
+   "Похоже, что-то пошло не так. Пожалуйста, попробуйте снова. Если это сообщение продолжит появляться, свяжитесь с @Hoksly или @Cubatomic",
+  "Здається, сталося щось неочікуване. Будь ласка, спробуйте знову. Якщо це повідомлення продовжить з\'являтись, повідомте про це @Hoksly або @Cubatomic"], # 7 - something went wrong
 
   ["Switched to Stolen Music", "Поток перенаправлен в Stolen Music",
    "Потік перенапралений в Stolen Music"], # 8 - switching to Stolen Music
